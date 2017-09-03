@@ -1,21 +1,28 @@
 package Oracle;
-use Mojo::Base 'Mojolicious';
+use Oracle::Base 'Mojolicious';
+
+use Oracle::Pg;
 
 # This method will run once at server start
-sub startup {
-  my $self = shift;
+sub startup ($self) {
+   $self->plugin('Oracle::Config');
+   $self->plugin('PlainRoutes', { autoname => 1 });
+   $self->sessions->default_expiration(60 * 60 * 24);
 
-  # Load configuration from hash returned by "my_app.conf"
-  my $config = $self->plugin('Config');
+   $self->helper(pg => sub {
+      state $pg = Oracle::Pg->new($self->config('db'));
+   });
 
-  # Documentation browser under "/perldoc"
-  $self->plugin('PODRenderer') if $config->{perldoc};
+   $self->helper(db => sub { $self->pg->db });
 
-  # Router
-  my $r = $self->routes;
+   $self->helper(user => sub ($c) {
+      $c->stash->{__user} //= do {
+         $c->session->{__user_id} //= $c->db->query(
+            'insert into users (temp) values (?) returning id', 1)->hash->{id};
 
-  # Normal route to controller
-  $r->get('/')->to('example#welcome');
+         $c->db->query('select * from users where id = ?', $c->session->{__user_id})->hash;
+      };
+   });
 }
 
 1;
