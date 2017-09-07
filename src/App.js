@@ -11,6 +11,7 @@ class App extends Component {
     this.state = { user: null };
 
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   async componentWillMount() {
@@ -43,12 +44,12 @@ class App extends Component {
     }
   }
 
-  handleLogout() {
-    fetchapi('/logout', {
-      method: 'post'
-    }).then(function (res) {
+  async handleLogout() {
+    let res = await fetchapi('/logout', { method: 'post' });
+    if (res.ok) {
       this.setState({ user: null });
-    })
+      localStorage.removeItem('user');
+    }
   }
 
   render() {
