@@ -16,13 +16,22 @@ sub startup ($self) {
    $self->helper(db => sub { $self->pg->db });
 
    $self->helper(user => sub ($c) {
-      $c->stash->{__user} //= do {
-         $c->session->{__user_id} //= $c->db->query(
-            'insert into users (temp) values (?) returning id', 1)->hash->{id};
-
-         $c->db->query('select * from users where id = ?', $c->session->{__user_id})->hash;
-      };
+      if (exists $c->session->{__user_id}) {
+         return $c->stash->{__user} //=
+            $c->db->query(
+               'select * from users where id = ?',
+               $c->session->{__user_id})->hash;
+      }
+      return undef;
    });
+
+   $self->helper(paramo => sub ($c, $key) {
+      return $c->param($key) // '';
+   });
+
+   $self->hook(before_dispatch => sub ($c) {
+      $c->stash->{format} = 'json';
+   })
 }
 
 1;

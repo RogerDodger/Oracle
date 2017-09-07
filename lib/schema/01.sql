@@ -68,7 +68,7 @@ CREATE TABLE players (
 );
 
 CREATE INDEX lists_user_id ON lists(user_id);
-CREATE INDEX rankings_list_id ON rankings(list_id, role);
+CREATE INDEX rankings_list_id ON rankings(list_id, role, score);
 CREATE INDEX friends_user2_id ON friends(user2_id);
 CREATE INDEX friend_reqs_reaper_id ON friend_reqs(reaper_id);
 CREATE INDEX teams_user_id ON teams(user_id);
