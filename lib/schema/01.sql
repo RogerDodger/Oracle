@@ -1,7 +1,8 @@
 -- 1 up
 
 CREATE TABLE users (
-   id bigint primary key,
+   id serial primary key,
+   steamid bigint unique,
    name text,
    profileurl text,
    avatar text,
@@ -67,6 +68,7 @@ CREATE TABLE players (
    PRIMARY KEY (team_id, user_id)
 );
 
+CREATE INDEX user_steamid ON users(steamid);
 CREATE INDEX lists_user_id ON lists(user_id);
 CREATE INDEX rankings_list_id ON rankings(list_id, role, score);
 CREATE INDEX friends_user2_id ON friends(user2_id);
