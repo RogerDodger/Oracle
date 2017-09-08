@@ -4,16 +4,13 @@ class LoginForm extends Component {
    constructor(props) {
       super(props);
       this.state = { name: '' };
-
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
    }
 
-   handleChange(e) {
+   handleChange = (e) => {
       this.setState({ name: e.target.value });
    }
 
-   handleSubmit(e) {
+   handleSubmit = (e) => {
       e.preventDefault();
       this.props.handleLogin(this.state.name);
    }

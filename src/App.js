@@ -9,9 +9,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { user: null };
-
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
   }
 
   async componentWillMount() {
@@ -28,7 +25,7 @@ class App extends Component {
     }
   }
 
-  async handleLogin(username) {
+  handleLogin = async (username) => {
     let form = new FormData();
     form.set('username', username);
 
@@ -44,7 +41,7 @@ class App extends Component {
     }
   }
 
-  async handleLogout() {
+  handleLogout = async () => {
     let res = await fetchapi('/logout', { method: 'post' });
     if (res.ok) {
       this.setState({ user: null });
