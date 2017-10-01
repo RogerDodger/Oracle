@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { Link, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { LoginForm, Logout } from './User.js';
+import { HeroSortContainer } from './Rank.js';
 import { fetchapi } from './helpers.js';
-import heroes from './heroes.json';
 import './App.css';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { user: null };
-  }
+  state = { user: null };
 
   async componentWillMount() {
     let user = localStorage.getItem('user');
@@ -67,27 +64,11 @@ class App extends Component {
                   )}
             </div>
           </div>
-          <Route path="/" component={Intro} />
+          { user &&
+            <Route path="/" component={HeroSortContainer} />}
         </div>
       </Router>
     );
-  }
-}
-
-class Intro extends Component {
-  render() {
-    return (
-      <div>
-        <div className="App-intro">
-          { heroes.map((e, i) => {
-            return <div key={ e.id }>{ e.localized_name }</div>
-          }) }
-        </div>
-        <div className="Link">
-          <Link to="/user">Click here to go somewhere else?</Link>
-        </div>
-      </div>
-    )
   }
 }
 

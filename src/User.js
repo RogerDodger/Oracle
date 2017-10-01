@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
 class LoginForm extends Component {
-   constructor(props) {
-      super(props);
-      this.state = { name: '' };
-   }
+   state = { name: '' };
 
    handleChange = (e) => {
       this.setState({ name: e.target.value });
