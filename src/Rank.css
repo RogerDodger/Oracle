@@ -55,7 +55,6 @@
    font-size: 2em;
 }
 
-
 .Hero-note {
    position: absolute;
    border: 0;
@@ -77,4 +76,49 @@
 .Hero-note:focus {
    background: hsla(0, 0%, 100%, 0.8);
    height: 80%;
+}
+
+.Hero-delete {
+   user-select: none;
+   cursor: pointer;
+   position: absolute;
+   line-height: 1;
+   color: red;
+   text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000,
+       0   -1px 0 #000,
+       1px  0   0 #000,
+      -1px  0   0 #000,
+       0    1px 0 #000;
+   font-size: 1.2em;
+   right: 0.1em;
+   bottom: 0.1em;
+}
+
+.Hero-delete-prompt {
+   display: flex;
+   flex-direction: column;
+   font-size: 0.7em;
+   color: white;
+   text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000,
+       0   -1px 0 #000,
+       1px  0   0 #000,
+      -1px  0   0 #000,
+       0    1px 0 #000;
+}
+
+.Hero-delete-confirm-controls {
+   display: flex;
+   justify-content: center;
+}
+
+.Hero-delete-confirm-controls > div {
+   margin: 0.2em;
 }

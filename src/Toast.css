@@ -1,0 +1,25 @@
+.Toast-container {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+
+   position: fixed;
+   top: 1.5em;
+   right: 1.5em;
+
+   font-size: 0.8rem;
+   background: #323232;
+   min-width: 15em;
+   max-width: 30em;
+   padding: 1.3em 1.7em;
+   border-radius: 0.2em;
+   box-shadow: 0 0 0.1em #aaa;
+   color: white;
+}
+
+.Toast-undo {
+   cursor: pointer;
+   margin-left: 1.5em;
+   color: hsla(200, 50%, 50%, 1);
+   text-transform: uppercase;
+}
