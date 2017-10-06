@@ -4,8 +4,9 @@
    justify-content: space-between;
 
    position: fixed;
-   top: 1.5em;
    right: 1.5em;
+   top: 0.5em;
+   opacity: 0;
 
    font-size: 0.8rem;
    background: #323232;
@@ -15,6 +16,12 @@
    border-radius: 0.2em;
    box-shadow: 0 0 0.1em #aaa;
    color: white;
+}
+
+.Toast-container.show {
+   transition: 0.2s all;
+   top: 1.5em;
+   opacity: 1;
 }
 
 .Toast-undo {

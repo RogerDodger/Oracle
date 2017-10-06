@@ -13,19 +13,31 @@ class ToastContainer extends Component {
       this._timeout = undefined;
    }
 
-   _setTimeout(cb) {
+   _setTimeout(cb, t=5000) {
       this._clearTimeout();
-      this._timeout = setTimeout(cb, 5000);
+      this._timeout = setTimeout(cb, t);
    }
 
    send = (message, undo) => {
-      this.setState({
-         message: message,
-         show: true,
-         undo: undo,
-      });
+      const show = () => {
+         this.setState({
+            message: message,
+            show: true,
+            undo: undo,
+         });
 
-      this._setTimeout(() => this.setState({ show: false }));
+         this._setTimeout(() => this.setState({ show: false }));
+      };
+
+      // If a toast is already showing, we delay our "show" state change by
+      // 50ms to ensure a repaint between { show: false } and { show: true }
+      if (this.state.show) {
+         this.setState({ show: false });
+         this._setTimeout(show, 50);
+      }
+      else {
+         show();
+      }
    }
 
    undo = () => {
@@ -35,11 +47,11 @@ class ToastContainer extends Component {
    }
 
    render() {
-      let s = { visibility: this.state.show ? 'initial' : 'hidden' };
+      let c = `Toast-container ${ this.state.show ? 'show' : '' }`;
 
       return (
-         <div className="Toast-container" style={s}>
-            <div className="Toast-message">{ this.state.message }</div>
+         <div className={c}>
+            <div className="Toast-message">{this.state.message}</div>
             { this.state.undo &&
                <div className="Toast-undo" onClick={this.undo}>Undo</div> }
          </div>
