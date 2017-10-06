@@ -122,3 +122,11 @@
 .Hero-delete-confirm-controls > div {
    margin: 0.2em;
 }
+
+.Select {
+   text-align: start;
+}
+
+.Select-control {
+   opacity: 0.9;
+}

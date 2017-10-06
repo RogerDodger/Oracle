@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import heroList from './heroes.json';
 import { ToastContainer } from './Toast.js';
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import './Rank.css';
 
 function heroImgUrl (name) {
@@ -12,27 +14,25 @@ class HeroAdd extends Component {
   state = { value: '' };
 
   handleChange = (e) => {
-    this.setState({ value: e.target.value });
+    this.setState({ value: e ? e.value : '' });
   };
 
   handleClick = (e) => {
-    if (e.target.localName === 'select' || e.target.localName === 'option') {
-      return;
-    }
-
-    if (this.state.value !== '') {
-      this.props.appendHero(this.state.value);
-      this.setState({ value: '' });
+    if (e.target.className === 'Hero-add-plus' || e.target.className === 'Hero-add-container') {
+      if (this.state.value !== '') {
+        this.props.appendHero(this.state.value);
+        this.setState({ value: '' });
+      }
     }
   };
 
   render() {
     let selected = {};
     this.props.heroes.forEach((e) => selected[e.id] = true);
-    let unselected =
-      heroList
+    let options = heroList
         .filter((e) => !selected[e.id])
-        .sort((a, b) => a.localized_name.localeCompare(b.localized_name));
+        .sort((a, b) => a.localized_name.localeCompare(b.localized_name))
+        .map((e) => { return { value: e.name, label: e.localized_name }; });
 
     let style = {};
     if (this.state.value !== '') {
@@ -42,14 +42,12 @@ class HeroAdd extends Component {
     return (
       <div className="Hero-add">
         <div className="Hero-add-container" style={style} onClick={this.handleClick}>
-          <select className="Hero-add-field"
-                  value={this.state.value}
-                  onChange={this.handleChange}>
-            <option value="" />
-            { unselected.map((e, i) => (
-              <option value={e.name} key={e.id}>{e.localized_name}</option>
-            )) }
-          </select>
+          <Select
+            className="Hero-add-field"
+            value={this.state.value}
+            onChange={this.handleChange}
+            options={options}
+          />
           <div className="Hero-add-plus">+</div>
         </div>
       </div>

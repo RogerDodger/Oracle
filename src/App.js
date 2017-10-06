@@ -64,8 +64,11 @@ class App extends Component {
                   )}
             </div>
           </div>
+          <div className="App-main">
           { user &&
             <Route path="/" component={HeroSortContainer} />}
+          </div>
+          <div className="App-footer"/>
         </div>
       </Router>
     );
