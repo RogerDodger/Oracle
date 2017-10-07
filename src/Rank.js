@@ -96,7 +96,6 @@ const HeroList = SortableContainer((props) => {
           deleteHero={props.deleteHero}
           updateNote={props.updateNote} />
       )) }
-      <HeroAdd heroes={props.heroes} appendHero={props.appendHero} />
     </div>
   )
 });
@@ -151,15 +150,20 @@ class HeroSortContainer extends Component {
 
   render() {
     return (
-      <div className="Hero-list-list">
-        <HeroList
-          heroes={this.state.heroes}
-          onSortEnd={this.onSortEnd}
-          appendHero={this.appendHero}
-          deleteHero={this.deleteHero}
-          updateNote={this.updateNote}
-          distance={2}
-          lockAxis='y'/>
+      <div className="Rank">
+        <div className="Role">
+          <HeroList
+            heroes={this.state.heroes}
+            onSortEnd={this.onSortEnd}
+            deleteHero={this.deleteHero}
+            updateNote={this.updateNote}
+            distance={2}
+            lockAxis='y'
+            lockToContainerEdges={true}
+            lockOffset={0}
+          />
+          <HeroAdd heroes={this.state.heroes} appendHero={this.appendHero} />
+        </div>
         <ToastContainer
           ref={input => this.toast = input} />
       </div>
