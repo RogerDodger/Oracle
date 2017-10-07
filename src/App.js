@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { LoginForm, Logout } from './User.js';
 import { HeroSortContainer } from './Rank.js';
 import { fetchapi } from './helpers.js';
+import 'typeface-roboto';
 import './App.css';
 
 class App extends Component {
