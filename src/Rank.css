@@ -5,7 +5,7 @@
 .Roles {
    display: flex;
    flex-direction: row;
-   overflow-x: auto;
+   overflow: visible;
 }
 
 .Role {
