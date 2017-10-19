@@ -18,6 +18,10 @@ class ToastContainer extends Component {
       this._timeout = setTimeout(cb, t);
    }
 
+   componentWillMount() {
+      toast.setContainer(this);
+   }
+
    send = (message, undo) => {
       const show = () => {
          this.setState({
@@ -59,4 +63,23 @@ class ToastContainer extends Component {
    }
 }
 
-export { ToastContainer };
+class ToastInterface {
+   send = (message, undo) => {
+      if (this.container) {
+         this.container.send(message, undo);
+      }
+      else {
+         alert("No container");
+      }
+   }
+
+   setContainer = (c) => {
+      if (c instanceof ToastContainer) {
+         this.container = c;
+      }
+   }
+}
+
+let toast = new ToastInterface();
+
+export { ToastContainer, toast };

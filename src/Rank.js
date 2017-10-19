@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import heroList from './heroes.json';
-import { ToastContainer } from './Toast.js';
+import roleList from './roles.json';
+import { toast } from './Toast.js';
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -100,7 +101,7 @@ const HeroList = SortableContainer((props) => {
   )
 });
 
-class HeroSortContainer extends Component {
+class Role extends Component {
   state = {
     heroes: heroList.slice(0, 10).map((e) => Object.assign({}, e))
   };
@@ -124,7 +125,7 @@ class HeroSortContainer extends Component {
       heroes: this.state.heroes.filter((e) => e !== hero)
     });
 
-    this.toast.send(
+    toast.send(
       `${hero.localized_name} removed`,
       () => { this.undoDeleteHero(hero, oldIndex); },
     )
@@ -150,25 +151,38 @@ class HeroSortContainer extends Component {
 
   render() {
     return (
-      <div className="Rank">
-        <div className="Role">
-          <HeroList
-            heroes={this.state.heroes}
-            onSortEnd={this.onSortEnd}
-            deleteHero={this.deleteHero}
-            updateNote={this.updateNote}
-            distance={2}
-            lockAxis='y'
-            lockToContainerEdges={true}
-            lockOffset={0}
-          />
-          <HeroAdd heroes={this.state.heroes} appendHero={this.appendHero} />
+      <div className="Role">
+        <div className="Role-name">
+          {this.props.role.name}
         </div>
-        <ToastContainer
-          ref={input => this.toast = input} />
+        <HeroList
+          heroes={this.state.heroes}
+          onSortEnd={this.onSortEnd}
+          deleteHero={this.deleteHero}
+          updateNote={this.updateNote}
+          distance={2}
+          lockAxis='y'
+          lockToContainerEdges={true}
+          lockOffset={0}
+        />
+        <HeroAdd heroes={this.state.heroes} appendHero={this.appendHero} />
       </div>
     )
   }
 }
 
-export { HeroSortContainer };
+class Rank extends Component {
+  render() {
+    return (
+      <div className="Rank">
+        <div className="Roles">
+          { roleList.map((e, i) =>
+            <Role role={e} key={e.pos} />
+          )}
+        </div>
+      </div>
+    )
+  }
+}
+
+export { Rank };

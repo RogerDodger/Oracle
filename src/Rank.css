@@ -1,12 +1,17 @@
 .Rank {
-   padding: 0.5em;
+   display: block;
+}
+
+.Roles {
    display: flex;
    flex-direction: row;
+   overflow-x: auto;
 }
 
 .Role {
    display: flex;
    flex-direction: column;
+   margin: 0.5em;
 }
 
 .Hero-list {

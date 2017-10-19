@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { ToastContainer } from './Toast.js';
 import { LoginForm, Logout } from './User.js';
-import { HeroSortContainer } from './Rank.js';
+import { Rank } from './Rank.js';
 import { fetchapi } from './helpers.js';
 import 'typeface-roboto';
 import './App.css';
@@ -53,6 +54,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
+          <ToastContainer />
           <div className="App-header">
             <div className="App-header--user">
               { user === null
@@ -67,7 +69,7 @@ class App extends Component {
           </div>
           <div className="App-main">
           { user &&
-            <Route path="/" component={HeroSortContainer} />}
+            <Route path="/" component={Rank} />}
           </div>
           <div className="App-footer"/>
         </div>
