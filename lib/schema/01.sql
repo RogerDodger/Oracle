@@ -14,7 +14,8 @@ CREATE TABLE users (
 CREATE TABLE lists (
    id serial primary key,
    user_id bigint references users(id),
-   updates int not null default 0
+   updates int not null default 0,
+   updated timestamp default current_timestamp
 );
 
 CREATE TABLE rankings (
@@ -27,8 +28,8 @@ CREATE TABLE rankings (
 );
 
 CREATE VIEW rankingsx AS
-   SELECT 
-   *, rank() OVER (PARTITION BY role ORDER BY score ASC) 
+   SELECT
+   *, rank() OVER (PARTITION BY role ORDER BY score ASC)
    FROM rankings;
 
 CREATE TABLE friends (
@@ -51,9 +52,9 @@ UNION
 
 CREATE TABLE friend_reqs (
    sender_id serial not null references users(id),
-   reaper_id serial not null references users(id),
-   PRIMARY KEY(sender_id, reaper_id),
-   check(sender_id != reaper_id)
+   receiver_id serial not null references users(id),
+   PRIMARY KEY(sender_id, receiver_id),
+   check(sender_id != receiver_id)
 );
 
 CREATE TABLE teams (
@@ -72,7 +73,7 @@ CREATE INDEX user_steamid ON users(steamid);
 CREATE INDEX lists_user_id ON lists(user_id);
 CREATE INDEX rankings_list_id ON rankings(list_id, role, score);
 CREATE INDEX friends_user2_id ON friends(user2_id);
-CREATE INDEX friend_reqs_reaper_id ON friend_reqs(reaper_id);
+CREATE INDEX friend_reqs_receiver_id ON friend_reqs(receiver_id);
 CREATE INDEX teams_user_id ON teams(user_id);
 CREATE INDEX players_user_id ON players(user_id);
 

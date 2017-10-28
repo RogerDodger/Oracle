@@ -58,7 +58,7 @@ class HeroAdd extends Component {
 
 
 class Hero extends Component {
-   startDelete = () => {
+   deleteHero = () => {
       this.props.deleteHero(this.props.hero);
    }
 
@@ -71,14 +71,19 @@ class Hero extends Component {
       const s = { backgroundImage : 'url(' + heroImgUrl(h.codename) + ')' };
 
       return (
-         <div className="Hero" style={s} title={h.localized_name}>
-            <div className="Hero-controls">
-               <textarea
-                  className="Hero-note"
-                  value={h.note}
-                  onChange={this.updateNote} />
-               <div className="Hero-delete" onClick={this.startDelete}>
-                  &times;
+         <div className="Hero" title={h.localized_name}>
+            <div className="Hero-fallback">
+               <div className="Hero-name">{h.localized_name}</div>
+            </div>
+            <div className="Hero-image" style={s}>
+               <div className="Hero-controls">
+                  <textarea
+                     className="Hero-note"
+                     value={h.note}
+                     onChange={this.updateNote} />
+                  <div className="Hero-delete" onClick={this.deleteHero}>
+                     &times;
+                  </div>
                </div>
             </div>
          </div>
