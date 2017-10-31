@@ -80,7 +80,8 @@
    border-color: hsla(200, 30%, 60%, 1);
 }
 
-.Hero-add-plus {
+/* Extra specificity necessary to beat .Button-reset */
+button.Hero-add-plus {
    user-select: none;
    font-size: 2em;
 }

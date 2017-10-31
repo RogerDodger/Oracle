@@ -20,7 +20,8 @@ class HeroAdd extends Component {
    };
 
    handleClick = (e) => {
-      if (e.target.className === 'Hero-add-plus' || e.target.className === 'Hero-add-container') {
+      if (e.target.classList.contains('Hero-add-plus') || e.target.className === 'Hero-add-container') {
+         e.preventDefault();
          if (this.state.value !== '') {
             this.props.appendHero(this.state.value);
             this.setState({ value: '' });
@@ -43,15 +44,15 @@ class HeroAdd extends Component {
 
       return (
          <div className="Hero-add">
-            <div className="Hero-add-container" style={style} onClick={this.handleClick}>
+            <form className="Hero-add-container" style={style} onClick={this.handleClick}>
                <Select
                   className="Hero-add-field"
                   value={this.state.value}
                   onChange={this.handleChange}
                   options={options}
                />
-               <div className="Hero-add-plus">+</div>
-            </div>
+               <button type="submit" className="Hero-add-plus Button-reset">+</button>
+            </form>
          </div>
       )
    }
