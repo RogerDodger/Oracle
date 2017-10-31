@@ -28,6 +28,10 @@ sub logout ($c) {
    $c->render(json => { user => undef });
 }
 
+sub auth ($c) {
+   !!$c->user;
+}
+
 sub me ($c) {
    $c->render(json => { user => $c->user });
 }

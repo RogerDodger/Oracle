@@ -10,7 +10,7 @@ import './App.css';
 class App extends Component {
    state = { user: null };
 
-   async componentWillMount() {
+   async componentDidMount() {
       let user = localStorage.getItem('user');
       if (user) {
          this.setState({ user: JSON.parse(user) });

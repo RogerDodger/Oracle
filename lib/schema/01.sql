@@ -13,25 +13,20 @@ CREATE TABLE users (
 );
 
 CREATE TABLE lists (
-   id serial primary key,
+   user_id serial references users(id),
    role smallint not null,
-   user_id bigint references users(id),
-   updates int not null default 0,
-   updated timestamp default current_timestamp
+   updated timestamp default current_timestamp,
+   PRIMARY KEY (user_id, role)
 );
 
 CREATE TABLE rankings (
-   id serial primary key,
-   list_id serial not null references lists(id),
-   hero_id text not null,
-   score double precision not null,
-   notes text
+   user_id serial references users(id),
+   role smallint not null,
+   hero text not null,
+   rank integer not null,
+   note text not null default '',
+   PRIMARY KEY (user_id, role, hero)
 );
-
-CREATE VIEW rankingsx AS
-   SELECT
-   *, rank() OVER (PARTITION BY role ORDER BY score ASC)
-   FROM rankings;
 
 CREATE TABLE friends (
    user1_id serial not null references users(id),
@@ -72,8 +67,7 @@ CREATE TABLE players (
 
 CREATE INDEX user_name ON users(name);
 CREATE INDEX user_steamid ON users(steamid);
-CREATE INDEX lists_user_id ON lists(user_id);
-CREATE INDEX rankings_list_id ON rankings(list_id, role, score);
+CREATE INDEX rankings_rank ON rankings(user_id, role, rank);
 CREATE INDEX friends_user2_id ON friends(user2_id);
 CREATE INDEX friend_reqs_receiver_id ON friend_reqs(receiver_id);
 CREATE INDEX teams_user_id ON teams(user_id);
@@ -86,7 +80,6 @@ DROP TABLE teams;
 DROP TABLE friend_reqs;
 DROP VIEW friendsx;
 DROP TABLE friends;
-DROP VIEW rankingsx;
 DROP TABLE rankings;
 DROP TABLE lists;
 DROP TABLE users;

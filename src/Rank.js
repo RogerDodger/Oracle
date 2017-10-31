@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import heroList from './heroes.json';
 import roleList from './roles.json';
 import { toast } from './Toast.js';
+import { fetchapi } from './helpers.js';
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -29,9 +30,9 @@ class HeroAdd extends Component {
 
    render() {
       let selected = {};
-      this.props.heroes.forEach((e) => selected[e.id] = true);
+      this.props.heroes.forEach((e) => selected[e.hero] = true);
       let options = heroList
-            .filter((e) => !selected[e.id])
+            .filter((e) => !selected[e.name])
             .sort((a, b) => a.localized_name.localeCompare(b.localized_name))
             .map((e) => { return { value: e.name, label: e.localized_name }; });
 
@@ -59,27 +60,27 @@ class HeroAdd extends Component {
 
 class Hero extends Component {
    deleteHero = () => {
-      this.props.deleteHero(this.props.hero);
+      this.props.deleteHero(this.props.el);
    }
 
    updateNote = (e) => {
-      this.props.updateNote(this.props.hero, e.target.value);
+      this.props.updateNote(this.props.el, e.target.value);
    }
 
    render() {
-      const h = this.props.hero;
-      const s = { backgroundImage : 'url(' + heroImgUrl(h.name) + ')' };
+      const el = this.props.el;
+      const s = { backgroundImage : 'url(' + heroImgUrl(el.hero) + ')' };
 
       return (
-         <div className="Hero" title={h.localized_name}>
+         <div className="Hero" title={el.hero}>
             <div className="Hero-fallback">
-               <div className="Hero-name">{h.localized_name}</div>
+               <div className="Hero-name">{el.hero}</div>
             </div>
             <div className="Hero-image" style={s}>
                <div className="Hero-controls">
                   <textarea
                      className="Hero-note"
-                     value={h.note}
+                     value={el.note}
                      onChange={this.updateNote} />
                   <div className="Hero-delete" onClick={this.deleteHero}>
                      &times;
@@ -98,7 +99,7 @@ const HeroList = SortableContainer((props) => {
       <div className="Hero-list">
          { props.heroes.map((e, i) => (
             <SortableHero
-               hero={e} index={i} key={e.id}
+               el={e} index={i} key={e.hero}
                deleteHero={props.deleteHero}
                updateNote={props.updateNote} />
          )) }
@@ -108,32 +109,48 @@ const HeroList = SortableContainer((props) => {
 
 class Role extends Component {
    state = {
-      listId: null,
       heroes: []
    };
 
-   onSortEnd = ({oldIndex, newIndex}) => {
-      this.setState({
-         heroes: arrayMove(this.state.heroes, oldIndex, newIndex),
+   syncHeroes = () => {
+      let form = new FormData();
+      form.set('role', this.props.role.pos);
+      form.set('heroes', JSON.stringify(this.state.heroes));
+      fetchapi('/list/set', {
+         method: 'post',
+         body: form,
       });
+   };
+
+   setHeroes = (heroes) => {
+      this.setState({ heroes: heroes });
+
+      clearTimeout(this._timeout);
+      this._timeout = setTimeout(this.syncHeroes, 1000);
+   };
+
+   onSortEnd = ({oldIndex, newIndex}) => {
+      this.setHeroes(
+         arrayMove(this.state.heroes, oldIndex, newIndex),
+      );
    };
 
    appendHero = (name) => {
-      this.setState({
-         heroes: this.state.heroes.concat(heroList.find((e) => e.name === name))
-      });
+      this.setHeroes(
+         this.state.heroes.concat({ hero: name, note: '' })
+      );
    };
 
-   deleteHero = (hero) => {
-      const oldIndex = this.state.heroes.indexOf(hero);
+   deleteHero = (el) => {
+      const oldIndex = this.state.heroes.indexOf(el);
 
-      this.setState({
-         heroes: this.state.heroes.filter((e) => e !== hero)
-      });
+      this.setHeroes(
+         this.state.heroes.filter((e) => e !== el)
+      );
 
       toast.send(
-         `${hero.localized_name} removed`,
-         () => { this.undoDeleteHero(hero, oldIndex); },
+         `${el.hero} removed`,
+         () => { this.undoDeleteHero(el, oldIndex); },
       )
    };
 
@@ -141,18 +158,18 @@ class Role extends Component {
       console.log(hero, index);
       let heroes = this.state.heroes.slice();
       heroes.splice(index, 0, hero);
-      this.setState({ heroes: heroes });
+      this.setHeroes(heroes);
    };
 
    updateNote = (hero, note) => {
-      this.setState({
-         heroes: this.state.heroes.map((e) => {
+      this.setHeroes(
+         this.state.heroes.map((e) => {
             if (e === hero) {
                return Object.assign(e, { note: note });
             }
             return e;
          })
-      })
+      )
    }
 
    render() {
@@ -178,12 +195,25 @@ class Role extends Component {
 }
 
 class Rank extends Component {
+   roles = [];
+
+   componentDidMount = async () => {
+      let res = await fetchapi("/list/me");
+      let json = await res.json();
+      console.log(json);
+      if (Array.isArray(json)) {
+         json.filter((e) => e.pos in this.roles).forEach((e) => {
+            this.roles[e.pos].setState({ heroes: e.heroes });
+         });
+      }
+   };
+
    render() {
       return (
          <div className="Rank">
             <div className="Roles">
                { roleList.map((e, i) =>
-                  <Role role={e} key={e.pos} />
+                  <Role role={e} key={e.pos} ref={(o) => this.roles[e.pos] = o } />
                )}
             </div>
          </div>
