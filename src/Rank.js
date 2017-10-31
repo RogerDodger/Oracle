@@ -108,7 +108,8 @@ const HeroList = SortableContainer((props) => {
 
 class Role extends Component {
    state = {
-      heroes: heroList.slice(0, 10).map((e) => Object.assign({}, e))
+      listId: null,
+      heroes: []
    };
 
    onSortEnd = ({oldIndex, newIndex}) => {

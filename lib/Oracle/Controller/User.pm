@@ -2,19 +2,18 @@ package Oracle::Controller::User;
 use Oracle::Base 'Mojolicious::Controller';
 
 sub login ($c) {
-   state $select = q{select * from users where name = ?};
-   state $insert = q{insert into users (name) values (?) returning id};
-
-   srand(time);
+   state $insert = q{
+      insert into users (name) values (?)
+      on conflict (name) do update set visited=current_timestamp
+      returning id
+   };
 
    if (!$c->user) {
       return $c->reply->exception("No username given")
          unless length $c->paramo('username');
 
-      $c->session->{__user_id} = (
-         $c->db->query($select, $c->paramo('username'))->hash //
-         $c->db->query($insert, $c->paramo('username'))->hash
-      )->{id};
+      $c->session->{__user_id} =
+         $c->db->query($insert, $c->paramo('username'))->hash->{id};
    }
 
    $c->render(json => { user => $c->user });

@@ -3,11 +3,12 @@
 CREATE TABLE users (
    id serial primary key,
    steamid bigint unique,
-   name text,
+   name text unique,
    profileurl text,
    avatar text,
    avatarmed text,
    avatarfull text,
+   visited timestamp default current_timestamp,
    updated timestamp default current_timestamp
 );
 
@@ -69,6 +70,7 @@ CREATE TABLE players (
    PRIMARY KEY (team_id, user_id)
 );
 
+CREATE INDEX user_name ON users(name);
 CREATE INDEX user_steamid ON users(steamid);
 CREATE INDEX lists_user_id ON lists(user_id);
 CREATE INDEX rankings_list_id ON rankings(list_id, role, score);

@@ -1,5 +1,13 @@
 ANY /api -> Root.api {
    POST /login -> User.login
-   POST /logout -> User.logout
    GET /me -> User.me
+
+   ANY / -> User.auth {
+      POST /logout -> User.logout
+
+      GET /list/me -> List.me
+      ANY /list -> List.fetch {
+         GET ...
+      }
+   }
 }
