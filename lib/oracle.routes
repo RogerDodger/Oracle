@@ -6,8 +6,6 @@ ANY /api -> Root.api {
       POST /logout -> User.logout
 
       GET /list/me -> List.me
-      ANY /list -> List.fetch {
-         GET ...
-      }
+      ANY /list -> List.fetch
    }
 }

@@ -7,8 +7,8 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import './Rank.css';
 
-function heroImgUrl (code) {
-   return `https://cdn.steamstatic.com/apps/dota2/images/heroes/${code}_full.png`;
+function heroImgUrl (name) {
+   return `/images/${name}.png`;
 };
 
 class HeroAdd extends Component {
@@ -33,7 +33,7 @@ class HeroAdd extends Component {
       let options = heroList
             .filter((e) => !selected[e.id])
             .sort((a, b) => a.localized_name.localeCompare(b.localized_name))
-            .map((e) => { return { value: e.codename, label: e.localized_name }; });
+            .map((e) => { return { value: e.name, label: e.localized_name }; });
 
       let style = {};
       if (this.state.value !== '') {
@@ -68,7 +68,7 @@ class Hero extends Component {
 
    render() {
       const h = this.props.hero;
-      const s = { backgroundImage : 'url(' + heroImgUrl(h.codename) + ')' };
+      const s = { backgroundImage : 'url(' + heroImgUrl(h.name) + ')' };
 
       return (
          <div className="Hero" title={h.localized_name}>
@@ -118,9 +118,9 @@ class Role extends Component {
       });
    };
 
-   appendHero = (code) => {
+   appendHero = (name) => {
       this.setState({
-         heroes: this.state.heroes.concat(heroList.find((e) => e.codename === code))
+         heroes: this.state.heroes.concat(heroList.find((e) => e.name === name))
       });
    };
 

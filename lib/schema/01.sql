@@ -14,6 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE lists (
    id serial primary key,
+   role smallint not null,
    user_id bigint references users(id),
    updates int not null default 0,
    updated timestamp default current_timestamp
@@ -23,7 +24,6 @@ CREATE TABLE rankings (
    id serial primary key,
    list_id serial not null references lists(id),
    hero_id text not null,
-   role smallint not null,
    score double precision not null,
    notes text
 );
